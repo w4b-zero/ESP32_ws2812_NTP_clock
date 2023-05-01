@@ -1,4 +1,3 @@
-//#include <ESP8266WiFi.h> //esp8266
 #include <WiFi.h>   //esp32
 #include <NTPClient.h>
 #include <WiFiUdp.h>
@@ -17,14 +16,19 @@ const int BUTTON_PIN = 17;
 
 int lastState = HIGH; // the previous state from the input pin
 int currentState;    // the current reading from the input pin
+int onoff = 1; //leds by start on
 const int RELAY_PIN = 22;  // the Arduino pin, which connects to the IN pin of relay
+int NTP_UPDATE_SEKUNDEN = 3600; // 3600 = 1 Stunde
+int data_update = 0;
+int data_epoch = 0;
+int next_update = 0;
 
 #define LED_PIN        16
 #define NUMPIXELS 118
 #define IR_INPUT_PIN 21
 #define IR_FEEDBACK_LED_PIN 2
 
-int onoff = 1; //leds by start on
+
 #include <IRremote.hpp>
 #include <TinyIRReceiver.hpp>
 
@@ -679,26 +683,39 @@ const char *ssid     = "FRITZ!Box Fon WLAN 7270";
 const char *password = "4813854476911701";
 
   WiFi.begin(ssid, password);
-  IrReceiver.begin(IR_INPUT_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
   DS18B20.begin();    // initialize the DS18B20 sensor
 
   pixels.begin();
+   pinMode(IR_FEEDBACK_LED_PIN, OUTPUT);
+
   pinMode(RELAY_PIN, OUTPUT);
 pinMode(BUTTON_PIN, INPUT);
  // irrecv.enableIRIn();
 //  irrecv.blink13(true);
 Serial.println("Winterzeit");
+int ledState = LOW;   // ledState used to set the LED
 
 Serial.print("verbinde zu Router");
   while (WiFi.status() != WL_CONNECTED) {
+      // if the LED is off turn it on and vice-versa:
+  ledState = (ledState == LOW) ? HIGH : LOW;
+
+  // set the LED with the ledState of the variable:
+  digitalWrite(IR_FEEDBACK_LED_PIN, ledState);
     delay(200);
     Serial.print(".");
+
   }
   Serial.println("verbunden!");
+  IrReceiver.begin(IR_INPUT_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
 
   timeClient.begin();
  
   digitalWrite(RELAY_PIN, HIGH);
+Serial.print("NTP-Server Update alle ");
+Serial.print(NTP_UPDATE_SEKUNDEN);
+Serial.println(" Sekunden");
+
 pixels.clear();
   pixels.show();            // Turn OFF all pixels ASAP
   pixels.setBrightness(bright); // Set BRIGHTNESS to about 1/5 (max = 255)
@@ -888,6 +905,10 @@ pixels.clear();
   //Serial.print("tempC");
   //Serial.println(tempC);
 int temp=tempC;
+data_epoch = timeClient.getEpochTime();
+
+
+if (data_update == 0 or data_epoch >= data_update+NTP_UPDATE_SEKUNDEN){
 
 
 timeClient.update();
@@ -896,6 +917,32 @@ timeClient.update();
   while(!timeClient.update()) {
     timeClient.forceUpdate();
   }
+if (data_update == 0){
+        Serial.print("Daten empfangen - Zeitstempel: ");
+}
+if (data_update != 0 && data_epoch >= data_update+NTP_UPDATE_SEKUNDEN){
+        Serial.print("Daten update - Zeitstempel: ");
+}
+data_update = timeClient.getEpochTime();
+//        Serial.print("data_update: ");
+        Serial.println(data_update);
+//        Serial.print("data_epoch: ");
+//        Serial.println(data_epoch);
+next_update = 0;
+}
+else{
+int update_NTP = NTP_UPDATE_SEKUNDEN - next_update;
+
+
+        Serial.print("Nächstes Update in ");
+        Serial.print(update_NTP);
+        Serial.println(" Sekunden");
+next_update ++;
+
+}
+
+  // int data_std_2 = data_std.toInt();
+
   String formattedDate = timeClient.getFormattedDate();
   int splitT = formattedDate.indexOf("T");
   String dayStamp = formattedDate.substring(0, splitT);
@@ -1289,17 +1336,21 @@ if(dataremote == -167117056){
     pixels.setPixelColor(std_60, pixels.Color(0,0,on)); 
     pixels.setPixelColor(min_60, pixels.Color(0,on,0)); 
   pixels.setPixelColor(sekunde, pixels.Color(on,0,0)); 
-//  Serial.print("std_60: ");
-//  Serial.println(std_60);
-//  Serial.print("min_60: ");
-//  Serial.println(min_60);
-//  Serial.print("sekunde: ");
-//  Serial.println(sekunde);
-//  Serial.print("data_sec2: ");
-//  Serial.println(data_sec2);
-//  Serial.print("data_min_2: ");
-//  Serial.println(data_min_2);
- // Serial.print("nightmode: ");
+
+ // Serial.print("std_60: ");
+ // Serial.println(std_60);
+ // Serial.print("min_60: ");
+ // Serial.println(min_60);
+ // Serial.print("sekunde: ");
+ // Serial.println(sekunde);
+
+
+  Serial.print(data_std_2);
+  Serial.print(":");
+  Serial.print(data_min_2);
+  Serial.print(":");
+  Serial.println(data_sec2);
+   // Serial.print("nightmode: ");
 //  Serial.println(nightmode);
 
 
