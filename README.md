@@ -5,11 +5,11 @@ Internet Time Clock (Ring 60Leds + Clock 58Leds)<br>
 Custom ESP Board<br>
 <img src="/images/board.jpg" width="400px"><br>
 <br>
-LEDs WS2812b          = GPIO 2/D4<br>
-Button                = GPIO 0/D3 (Nightmode / Daymode)<br>
-IR TSOP38238          = GPIO 4/D2<br>
-Relay SRD-05VDC-SL-A  = GPIO 5/D1<br>
-Temp DS18B20          = GPIO 14/D5<br>
+LEDs WS2812b          = GPIO 16<br>
+Button                = GPIO 17 (Nightmode / Daymode)<br>
+IR TSOP38238          = GPIO 21<br>
+Relay SRD-05VDC-SL-A  = GPIO 22<br>
+Temp DS18B20          = GPIO 18<br>
 <br>
 ESP Dev Module<br>
 <img src="/images/ESP32_d1_mini.jpg" width="200px"><br>
