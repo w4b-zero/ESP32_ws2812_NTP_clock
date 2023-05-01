@@ -1,6 +1,6 @@
-# ESP32-ws2812-Clock
-Internet Time Clock (Ring 60Leds + Clock 58Leds)
-<img src="/images/ESP32_WS2812b_Uhr.jpg" width="400px">
+# ESP32-ws2812-Clock<br>
+Internet Time Clock (Ring 60Leds + Clock 58Leds)<br>
+<img src="/images/ESP32_WS2812b_Uhr.jpg" width="400px"><br>
 <br>
 Custom ESP Board<br>
 <img src="/images/board.jpg" width="400px"><br>
