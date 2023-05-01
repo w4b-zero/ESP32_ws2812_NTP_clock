@@ -12,7 +12,7 @@ Relay SRD-05VDC-SL-A  = GPIO 5/D1<br>
 Temp DS18B20          = GPIO 14/D5<br>
 <br>
 ESP Dev Module<br>
-<img src="/images/ESP32_d1_mini.jpg" width="400px"><br>
+<img src="/images/ESP32_d1_mini.jpg" width="200px"><br>
 <br>
 IR Remote<br>
 <img src="/images/IR_Remote.jpg" width="200px"><br>
