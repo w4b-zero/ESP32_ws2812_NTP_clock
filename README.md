@@ -1,4 +1,4 @@
-# ESP32-ws2812-Clock<br>
+# ESP32-ws2812-NTP-Clock<br>
 Internet Time Clock (Ring 60Leds + Clock 58Leds)<br>
 <img src="/images/ESP32_WS2812b_Uhr.jpg" width="400px"><br>
 <br>
