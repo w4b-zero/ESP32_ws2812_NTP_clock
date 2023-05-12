@@ -15,7 +15,7 @@ Please select your router there and enter your password.<br>
 Selectable languages are German, English and Dutch.<br>
 With the help of a checkbox you can protect the web control panel with a password, which you can enter in the text field below.<br>
 *The password already contained therein was automatically generated at the first start.*<br>
-Finally, all you have to do is click on save - if everything went well, ##**##**##** should appear in the wifi password text field.<br>
+Finally, all you have to do is click on save - if everything went well, `##**##**##**` should appear in the wifi password text field.<br>
 Now you can click Reboot device to connect to your router.<br>
 <br>
 To call up the web configuration panel again, you have to press the "Start Config Button" for about 3 seconds when restarting/switching on. <br>
