@@ -1,11 +1,22 @@
-#include <WiFi.h>   //esp32
+//#include <WiFi.h>   //esp32
+#include <SPIFFS.h>
+#include <WiFiSettings.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <Adafruit_NeoPixel.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
+//#define CONFIG_PIN  27 // ESP32 pin GIOP27 Pressed by Power ON dissconnect from Router and starts the Config-AP!!!
+#define CONFIG_PIN  27 // ESP32 pin GIOP27 Pressed by Power ON dissconnect from Router and starts the Config-AP!!!
+
 #define SENSOR_PIN  18 // ESP32 pin GIOP21 connected to DS18B20 sensor's DQ pin
+// Status LED
+
+
+const uint32_t LED_PIN = 2;
+#define LED_ON  LOW
+#define LED_OFF HIGH
 
 OneWire oneWire(SENSOR_PIN);
 DallasTemperature DS18B20(&oneWire);
@@ -23,16 +34,16 @@ int data_update = 0;
 int data_epoch = 0;
 int next_update = 0;
 
-#define LED_PIN        16
+#define RGB_PIN        16
 #define NUMPIXELS 118
-#define IR_INPUT_PIN 21
+#define IR_RECEIVE_PIN 21
 #define IR_FEEDBACK_LED_PIN 2
 
 
 #include <IRremote.hpp>
 #include <TinyIRReceiver.hpp>
 
-Adafruit_NeoPixel pixels(NUMPIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels(NUMPIXELS, RGB_PIN, NEO_GRB + NEO_KHZ800);
 #define DELAYVAL 50
 
 //Zeitverschiebung UTC <-> MEZ (Winterzeit) = 3600 Sekunden (1 Stunde)
@@ -679,10 +690,29 @@ void setup()
 
   Serial.begin(115200);
 //#include "wifi_sec.cpp"
-const char *ssid     = "FRITZ!Box Fon WLAN 7270";
-const char *password = "4813854476911701";
+//const char *ssid     = "wifissid";
+//const char *password = "wifipass";
+    WiFiSettings.hostname = "ESP-Clock";
+    WiFiSettings.language = "de";
+    SPIFFS.begin(true);  // Will format on the first run after failing to mount
 
-  WiFi.begin(ssid, password);
+    pinMode(LED_PIN, OUTPUT);
+ pinMode(CONFIG_PIN, INPUT_PULLUP);
+//  WiFi.begin(ssid, password);
+
+    // Set custom callback functions
+    WiFiSettings.onSuccess  = []() {
+        digitalWrite(LED_PIN, LED_ON); // Turn LED on
+    };
+    WiFiSettings.onFailure  = []() {
+        digitalWrite(LED_PIN, LED_OFF); // Turn LED off
+    };
+    WiFiSettings.onWaitLoop = []() {
+        digitalWrite(LED_PIN, !digitalRead(LED_PIN)); // Toggle LED
+        return 500; // Delay next function call by 500ms
+    };
+    //String host = WiFiSettings.string( "server_host", "default.example.org");
+    //int    port = WiFiSettings.integer("server_port", 443);
   DS18B20.begin();    // initialize the DS18B20 sensor
 
   pixels.begin();
@@ -692,22 +722,34 @@ const char *password = "4813854476911701";
 pinMode(BUTTON_PIN, INPUT);
  // irrecv.enableIRIn();
 //  irrecv.blink13(true);
+
+    WiFiSettings.connect(true, 30);
+
+byte pressed_config_pin = digitalRead(CONFIG_PIN);
+if(pressed_config_pin == LOW){
+Serial.println("Config-Button Pressed");
+
+WiFiSettings.portal();
+
+}
+
+
 Serial.println("Winterzeit");
 int ledState = LOW;   // ledState used to set the LED
 
-Serial.print("verbinde zu Router");
-  while (WiFi.status() != WL_CONNECTED) {
+//Serial.print("verbinde zu Router");
+//  while (WiFi.status() != WL_CONNECTED) {
       // if the LED is off turn it on and vice-versa:
-  ledState = (ledState == LOW) ? HIGH : LOW;
+//  ledState = (ledState == LOW) ? HIGH : LOW;
 
   // set the LED with the ledState of the variable:
-  digitalWrite(IR_FEEDBACK_LED_PIN, ledState);
-    delay(200);
-    Serial.print(".");
+//  digitalWrite(IR_FEEDBACK_LED_PIN, ledState);
+ //   delay(200);
+   // Serial.print(".");
 
-  }
+  //}
   Serial.println("verbunden!");
-  IrReceiver.begin(IR_INPUT_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK); // Start the receiver
 
   timeClient.begin();
  
