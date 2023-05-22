@@ -33,6 +33,9 @@ IR TSOP38238          = GPIO 21<br>
 Relay SRD-05VDC-SL-A  = GPIO 22<br>
 Temp DS18B20          = GPIO 18<br>
 <br>
+arrangement of LEDs<br>
+<img src="/images/LED_order.jpg" width="400px"><br>
+<br>
 ESP Dev Module<br>
 <img src="/images/ESP32_d1_mini.jpg" width="200px"><br>
 <br>
