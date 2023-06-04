@@ -82,4 +82,4 @@ ON / OFF All Led Off used Relay<br>
 
 ## My Discord Server
 
-<a href="https://discord.gg/mWFdm5Hg"><img src="https://discord.com/api/guilds/1106048601269993482/widget.png?style=banner2" width="25%"></a> <br>
+<a href="https://discord.gg/kteShSHU"><img src="https://discord.com/api/guilds/1106048601269993482/widget.png?style=banner2" width="25%"></a> <br>
