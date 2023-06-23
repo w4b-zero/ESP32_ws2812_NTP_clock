@@ -29,7 +29,7 @@ To call up the web configuration panel again, you have to press the "Start Confi
 ## Used Libraries
 
 <ul>
-	<li> adafruit/Adafuit NeoPixel@^1.10.6 </li>
+	<li> fastled/FastLED @ ^3.6.0</li>
 	<li> https://github.com/taranais/NTPClient </li>
 	<li> https://github.com/Arduino-IRremote/Arduino-IRremote </li>
 	<li> paulstoffregen/OneWire @ ^2.3.7 </li>
